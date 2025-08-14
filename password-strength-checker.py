@@ -1,11 +1,25 @@
 import string
 
+STRONG_SCORE = 17.33
+MEDIUM_SCORE = 8.67
 
 def main():
     print("WELCOME TO THE PASSWORD strength CHECKER!!!")
     passwd = input("Inform the password for the strength check: ")
-    score = digit_minimum(passwd) + upperlower(passwd) + has_digit(passwd) + has_symbols(passwd)
-    tell_score(score)
+
+    score = check_criteria(passwd)
+    tell_score(score, STRONG_SCORE, MEDIUM_SCORE)
+
+# ----- Check all criteria -----
+def check_criteria(passwd):
+    criteria = [
+        digit_minimum,
+        upperlower,
+        has_digit,
+        has_symbols
+    ]
+    return sum(criterion(passwd) for criterion in criteria)
+
 
 # ----- At least 8 digits (2) -----
 def digit_minimum(passwd):
@@ -35,6 +49,7 @@ def has_digit(passwd):
         print("The password does not contain any numbers.")
         return 0
 
+
 # ----- Symbols (! @ # $) (10) -----
 def has_symbols(passwd):
     symbols = list(string.punctuation)
@@ -44,12 +59,13 @@ def has_symbols(passwd):
         print("The password does not contain symbols.")
         return 0
 
+
 # ----- Inform score (max. = 26) -----
-def tell_score(points):
-    if points >= 17.33:
+def tell_score(points, strong, medium):
+    if points >= strong:
         print(f"Password points: {points}")
         print("Your password is STRONG!!! 💪 💪 💪")
-    elif points >= 8.67:
+    elif points >= medium:
         print(f"Password points: {points}")
         print("Your password is average. 😑 😑 😑")
     else:
